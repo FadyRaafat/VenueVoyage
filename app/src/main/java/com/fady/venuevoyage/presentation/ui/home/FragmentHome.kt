@@ -6,7 +6,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.fady.venuevoyage.R
 import com.fady.venuevoyage.data.models.Venue
-import com.fady.venuevoyage.databinding.FragmentHomeBinding
 import com.fady.venuevoyage.presentation.ui.adapters.VenuesAdapter
 import com.fady.venuevoyage.presentation.utils.base.BaseFragment
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -17,6 +16,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import com.fady.venuevoyage.databinding.FragmentHomeBinding
 
 @AndroidEntryPoint
 class FragmentHome : BaseFragment<FragmentHomeBinding, VenuesViewModel>(), OnMapReadyCallback {
@@ -29,7 +29,7 @@ class FragmentHome : BaseFragment<FragmentHomeBinding, VenuesViewModel>(), OnMap
 
     private lateinit var mMap: GoogleMap
 
-    override fun FragmentHomeBinding.initializeUI() {
+    override fun com.fady.venuevoyage.databinding.FragmentHomeBinding.initializeUI() {
         binding.apply {
             mainViewModel = mainVM
             switchToList()
