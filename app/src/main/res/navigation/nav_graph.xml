@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@+id/fragmentSplash">
+
+    <fragment
+        android:id="@+id/fragmentSplash"
+        android:name="com.fady.venuevoyage.presentation.ui.splash.FragmentSplash"
+        android:label="fragmentSplash"
+        tools:layout="@layout/fragment_splash">
+
+        <action
+            android:id="@+id/action_fragmentSplash_to_fragmentLogin"
+            app:destination="@id/fragmentLogin"
+            app:enterAnim="@anim/pop_enter_slide_up"
+            app:exitAnim="@anim/pop_exit_slide_up"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_fragmentSplash_to_fragmentHome"
+            app:destination="@id/fragmentHome"
+            app:enterAnim="@anim/pop_enter_slide_up"
+            app:exitAnim="@anim/pop_exit_slide_up"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentLogin"
+        android:name="com.fady.venuevoyage.presentation.ui.auth.FragmentLogin"
+        android:label="fragmentLogin"
+        tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/action_fragmentLogin_to_fragmentRegister"
+            app:destination="@id/fragmentRegister"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+
+        <action
+            android:id="@+id/action_fragmentLogin_to_fragmentHome"
+            app:destination="@id/fragmentHome"
+            app:enterAnim="@anim/pop_enter_slide_up"
+            app:exitAnim="@anim/pop_exit_slide_up"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/fragmentRegister"
+        android:name="com.fady.venuevoyage.presentation.ui.auth.FragmentRegister"
+        android:label="fragmentRegister"
+        tools:layout="@layout/fragment_register" />
+
+    <fragment
+        android:id="@+id/fragmentHome"
+        android:name="com.fady.venuevoyage.presentation.ui.home.FragmentHome"
+        android:label="fragmentHome"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/fragmentProfile"
+        android:name="com.fady.venuevoyage.presentation.ui.profile.FragmentProfile"
+        android:label="fragmentProfile"
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/fragmentTermsAndConditions"
+        android:name="com.fady.venuevoyage.presentation.ui.terms.FragmentTermsAndConditions"
+        android:label="fragmentTermsAndConditions"
+        tools:layout="@layout/fragment_terms_and_conditions" />
+
+</navigation>

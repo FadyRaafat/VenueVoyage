@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="categoryImage"
+            type="String" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/rounded_grey_stroke"
+        android:padding="8dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/categoryIconIV"
+            setNetworkImage="@{categoryImage}"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="4dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/venueNameTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:layout_marginStart="8dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/categoryIconIV"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Venue Name" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/categoryName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey_selected"
+            android:textSize="18sp"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="8dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/categoryIconIV"
+            app:layout_constraintTop_toBottomOf="@id/venueNameTv"
+            tools:text="Category" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/venueAddressTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/grey_selected"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_marginStart="8dp"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@id/categoryIconIV"
+            app:layout_constraintTop_toBottomOf="@id/categoryName"
+            tools:text="Venue Address" />
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
