@@ -22,7 +22,11 @@ class VenuesViewModel @Inject constructor(
 
     fun getVenuesByLocation() {
         fusedLocationProviderClient.lastLocation.addOnSuccessListener { loc: Location? ->
-            getVenues(arrayOf(loc?.latitude ?: 23.0340847, loc?.longitude ?: 72.508472))
+            loc?.let {
+                getVenues(arrayOf(loc.latitude, loc.longitude))
+            }
+        }.addOnFailureListener {
+            getVenues(arrayOf(23.0340847, 72.508472))
         }
     }
     // getVenues

@@ -47,5 +47,5 @@
     <string name="invalid_credentials">Invalid Credentials</string>
     <string name="list">List</string>
     <string name="map">Map</string>
-    <string name="location_permission_is_required">Location permission is required</string>
+    <string name="location_permission_is_required">Location permission is required for seamless experience</string>
 </resources>

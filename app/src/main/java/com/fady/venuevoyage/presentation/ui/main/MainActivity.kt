@@ -92,7 +92,6 @@ class MainActivity : AppCompatActivity() {
             val allPermissionsGranted = permissions.all { it.value == true }
             if (allPermissionsGranted.not()) {
                 toast(R.string.location_permission_is_required)
-                finish()
             }
         }
     }
