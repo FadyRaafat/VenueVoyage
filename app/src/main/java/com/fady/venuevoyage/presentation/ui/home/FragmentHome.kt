@@ -1,22 +1,28 @@
 package com.fady.venuevoyage.presentation.ui.home
 
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.view.LayoutInflater
+import android.view.WindowManager
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.fady.venuevoyage.R
 import com.fady.venuevoyage.data.models.Venue
+import com.fady.venuevoyage.databinding.DialogVenueDetailsBinding
+import com.fady.venuevoyage.databinding.FragmentHomeBinding
 import com.fady.venuevoyage.presentation.ui.adapters.VenuesAdapter
 import com.fady.venuevoyage.presentation.utils.base.BaseFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import com.fady.venuevoyage.databinding.FragmentHomeBinding
 
 @AndroidEntryPoint
 class FragmentHome : BaseFragment<FragmentHomeBinding, VenuesViewModel>(), OnMapReadyCallback {
@@ -29,21 +35,20 @@ class FragmentHome : BaseFragment<FragmentHomeBinding, VenuesViewModel>(), OnMap
 
     private lateinit var mMap: GoogleMap
 
-    override fun com.fady.venuevoyage.databinding.FragmentHomeBinding.initializeUI() {
+    override fun FragmentHomeBinding.initializeUI() {
         binding.apply {
             mainViewModel = mainVM
-            switchToList()
+            viewModel.getVenuesByLocation()
             listTV.setOnClickListener {
                 switchToList()
             }
             mapTV.setOnClickListener {
                 switchToMap()
             }
+            initMap()
+            switchToList()
         }
-        viewModel.getVenues(
-            location = arrayOf(23.0340847, 72.508472)
-        )
-        iniTMap()
+
     }
 
     private fun switchToList() {
@@ -58,7 +63,7 @@ class FragmentHome : BaseFragment<FragmentHomeBinding, VenuesViewModel>(), OnMap
         binding.mapCardView.show()
     }
 
-    private fun iniTMap() {
+    private fun initMap() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this@FragmentHome)
     }
@@ -70,7 +75,6 @@ class FragmentHome : BaseFragment<FragmentHomeBinding, VenuesViewModel>(), OnMap
                     viewModel.getVenuesResponse()?.response?.venues?.let { venues ->
                         setVenuesRV(venues)
                         setupMarkers(venues)
-
                     }
                 }
             }
@@ -85,60 +89,99 @@ class FragmentHome : BaseFragment<FragmentHomeBinding, VenuesViewModel>(), OnMap
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        mMap.addMarker(
-            MarkerOptions().position(
-                LatLng(
-                    23.0340847, 72.508472
-
-                )
-            )
-        )
-        mMap.moveCamera(
-            CameraUpdateFactory.newLatLngZoom(
-                LatLng(
-                    23.0340847, 72.508472
-                ), 15f
-            )
-        )
-
+        mMap.uiSettings.apply {
+            isZoomGesturesEnabled = true
+            isScrollGesturesEnabled = true
+        }
+        mMap.setOnMarkerClickListener { marker ->
+            getSelectedVenue(marker.tag as String)
+            true
+        }
     }
 
-    private fun setupMarkers(data: List<Venue>?) {
-        data?.forEach { venue ->
+    private fun getSelectedVenue(venueId: String) {
+        viewModel.getVenueById(venueId)?.let {
+            showVenueDetails(it)
+        }
+    }
+
+    private fun showVenueDetails(venue: Venue) {
+        val binding: DialogVenueDetailsBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(
+                requireContext()
+            ), R.layout.dialog_venue_details, null, false
+        )
+        Dialog(requireContext()).apply {
+            setContentView(binding.root)
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            window?.setLayout(
+                WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT
+            )
+            setCancelable(true)
+            setCanceledOnTouchOutside(true)
+            binding.apply {
+                venueNameTv.text = venue.name
+                venueAddressTv.text = venue.location?.getFormattedAddress()
+                venue.categories?.firstOrNull()?.let {
+                    categoryName.text = it.name ?: ""
+                    categoryImage = it.icon?.getIconUrl()
+
+                }
+            }
+            show()
+        }
+    }
+
+    private fun setupMarkers(venues: List<Venue>?) {
+        venues?.forEach { venue ->
             venue.location?.let {
                 mMap.addMarker(
                     MarkerOptions().position(it.getLatLng())
                 )?.tag = venue.id
             }
         }
+        zoomToLocation(venues?.first())
+
+    }
+
+    private fun zoomToLocation(venue: Venue?) {
+        venue?.location?.let {
+            mMap.moveCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    it.getLatLng(), 15f
+                )
+            )
+        }
     }
 
     private fun switchViews(
         textView: TextView, secondOtherTextView: TextView
     ) {
-        val density = requireContext().resources.displayMetrics.density
-        val paddingPixel = (10 * density).toInt()
-
-        textView.background = ContextCompat.getDrawable(
-            requireContext(), R.drawable.rounded_white
-        )
-        textView.setTextColor(
-            ContextCompat.getColor(
-                requireContext(), R.color.colorPrimary
-            )
-        )
-        textView.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-        textView.setPadding(paddingPixel, paddingPixel, paddingPixel, paddingPixel)
-
-        secondOtherTextView.setTextColor(
-            ContextCompat.getColor(
-                requireContext(), R.color.grey_888892
-            )
-        )
-        secondOtherTextView.background = ContextCompat.getDrawable(
-            requireContext(), R.drawable.rounded_grey
-        );
-        secondOtherTextView.setPadding(paddingPixel, paddingPixel, paddingPixel, paddingPixel);
+        (10 * requireContext().resources.displayMetrics.density).toInt().let { pixel ->
+            textView.apply {
+                background = ContextCompat.getDrawable(
+                    requireContext(), R.drawable.rounded_white
+                )
+                setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(), R.color.colorPrimary
+                    )
+                )
+                textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                setPadding(pixel, pixel, pixel, pixel)
+            }
+            secondOtherTextView.apply {
+                setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(), R.color.grey_888892
+                    )
+                )
+                background = ContextCompat.getDrawable(
+                    requireContext(), R.drawable.rounded_grey
+                )
+                setPadding(pixel, pixel, pixel, pixel)
+            }
+        }
 
     }
 

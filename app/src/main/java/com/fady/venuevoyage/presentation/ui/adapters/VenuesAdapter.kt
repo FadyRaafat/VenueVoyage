@@ -9,7 +9,7 @@ import com.fady.venuevoyage.data.models.Venue
 import com.fady.venuevoyage.databinding.ItemVenueBinding
 import com.fady.venuevoyage.presentation.utils.base.DataBoundListAdapter
 
-class VenuesAdapter() : DataBoundListAdapter<Venue, ItemVenueBinding>(diffCallback = object :
+class VenuesAdapter : DataBoundListAdapter<Venue, ItemVenueBinding>(diffCallback = object :
     DiffUtil.ItemCallback<Venue>() {
     override fun areContentsTheSame(
         oldItem: Venue, newItem: Venue

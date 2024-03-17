@@ -9,11 +9,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.fady.venuevoyage.presentation.utils.common.AppExecutors
+import com.fady.venuevoyage.presentation.ui.main.MainViewModel
 import com.fady.venuevoyage.presentation.utils.common.ViewUtils.handleApiError
 import com.fady.venuevoyage.presentation.utils.common.ViewUtils.hideLoadingDialog
 import com.fady.venuevoyage.presentation.utils.common.ViewUtils.showLoadingDialog
-import com.fady.venuevoyage.presentation.ui.main.MainViewModel
 
 abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel?> : Fragment() {
 
@@ -21,7 +20,6 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel?> : Fragment
     lateinit var toolbarBinding: ViewDataBinding
     protected val mainVM: MainViewModel by activityViewModels()
 
-    lateinit var appExecutors: AppExecutors
     protected abstract val viewModel: VM
     private var progressDialog: Dialog? = null
 
@@ -30,7 +28,6 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel?> : Fragment
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        appExecutors = AppExecutors()
         binding = DataBindingUtil.inflate(inflater, layout(), container, false)
         return binding.root
     }

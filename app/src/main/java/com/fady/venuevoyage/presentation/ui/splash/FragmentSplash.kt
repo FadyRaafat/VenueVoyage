@@ -28,7 +28,6 @@ class FragmentSplash : BaseFragment<FragmentSplashBinding, AuthViewModel>() {
                 delay(1500)
                 if (apiSuccess) {
                     findNavController().navigate(FragmentSplashDirections.actionFragmentSplashToFragmentHome())
-
                 } else {
                     findNavController().navigate(FragmentSplashDirections.actionFragmentSplashToFragmentLogin())
 

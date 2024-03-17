@@ -7,8 +7,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
-import android.view.animation.AnimationUtils
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.Group
@@ -18,9 +16,6 @@ import com.fady.venuevoyage.R
 import com.fady.venuevoyage.databinding.ProgressDialogLayoutBinding
 import com.google.android.material.snackbar.Snackbar
 import com.tapadoo.alerter.Alerter
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 
 object ViewUtils {
     fun showLoadingDialog(activity: Activity?, hint: String?): Dialog? {
@@ -55,7 +50,7 @@ object ViewUtils {
     }
 
 
-    fun View.show() {
+    private fun View.show() {
         if (visibility == View.VISIBLE) return
 
         visibility = View.VISIBLE
@@ -64,7 +59,7 @@ object ViewUtils {
         }
     }
 
-    fun View.hide() {
+    private fun View.hide() {
         if (visibility == View.GONE) return
 
         visibility = View.GONE
@@ -102,7 +97,7 @@ object ViewUtils {
         }
     }
 
-    fun showNoInternetAlert(activity: Activity) {
+    private fun showNoInternetAlert(activity: Activity) {
         Alerter.create(activity)
             .setTitle(activity.resources.getString(R.string.connection_error))
             .setText(activity.resources.getString(R.string.no_internet))
@@ -113,7 +108,7 @@ object ViewUtils {
             .show()
     }
 
-    fun View.showSnackBar(
+    private fun View.showSnackBar(
         message: String,
         retryActionName: String? = null,
         action: (() -> Unit)? = null
@@ -133,80 +128,21 @@ object ViewUtils {
         window.statusBarColor = getColorCompat(color)
     }
 
-    fun Context.getColorCompat(color: Int) = ContextCompat.getColor(this, color)
+    private fun Context.getColorCompat(color: Int) = ContextCompat.getColor(this, color)
 
-    fun todayDate() =
-        SimpleDateFormat(
-            "EEEE, dd MMM yyyy",
-            Locale.getDefault()
-        ).format(Calendar.getInstance().time) ?: ""
-
-    fun Context.getMyString(id: Int, vararg formatArgs: Any) =
-        resources.getString(id, *formatArgs)
-
-    fun String.getDateDescription(): String? {
-        return SimpleDateFormat(
-            "yyyy-MM-dd",
-            Locale.getDefault()
-        ).parse(this)?.let {
-            SimpleDateFormat(
-                "EEEE",
-                Locale.getDefault()
-            ).format(
-                it
-            )
-        }
-
-    }
-
-    fun View.showAnimation(context: Context) {
-        this.visibility = View.VISIBLE
-        this.startAnimation(
-            AnimationUtils.loadAnimation(
-                context,
-                R.anim.slide_down
-            )
-        )
-    }
-
-    fun View.hideAnimation(context: Context) {
-        this.startAnimation(
-            AnimationUtils.loadAnimation(
-                context,
-                R.anim.slide_up
-            )
-        )
-        this.visibility = View.GONE
-    }
-
-    fun Activity.hideKeyboard() {
-        // Only runs if there is a view that is currently focused
-        this.currentFocus?.let { view ->
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            imm?.hideSoftInputFromWindow(view.windowToken, 0)
-        }
-    }
-
-    enum class DrawerPage {
-        HOME,
-        PROFILE,
-        TERMS_AND_CONDITIONS,
-        LOGOUT
-    }
 
     fun String.isValidPassword(): Boolean {
-        val passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[\$@\$!%*?&])[A-Za-z\\d\$@\$!%*?&]{8,}\$".toRegex()
+        val passwordRegex =
+            "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[\$@!%*?&])[A-Za-z\\d\$@!%*?&]{8,}\$".toRegex()
         return passwordRegex.matches(this)
     }
 
     fun String.isValidEmail(): Boolean {
-        val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})".toRegex()
+        val emailRegex = "^[A-Za-z](.*)(@)(.+)(\\.)(.+)".toRegex()
         return emailRegex.matches(this)
     }
     fun Context?.toast(@StringRes textId: Int, duration: Int = Toast.LENGTH_LONG) =
         this?.let { Toast.makeText(it, textId, duration).show() }
 
-    fun Context?.toastStringText(text: String, duration: Int = Toast.LENGTH_LONG) =
-        this?.let { Toast.makeText(it, text, duration).show() }
 
 }

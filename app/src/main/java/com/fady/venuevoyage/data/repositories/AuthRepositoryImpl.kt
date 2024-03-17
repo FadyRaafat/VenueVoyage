@@ -32,6 +32,6 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun isLoggedIn(): Resource<Boolean> {
-        return Resource.Success(LocalDataSource.token != null)
+        return Resource.Success(LocalDataSource.isUserLoggedIn())
     }
 }

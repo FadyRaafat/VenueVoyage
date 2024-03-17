@@ -30,7 +30,6 @@ object RetrofitModule {
     fun provideHeadersInterceptor() = Interceptor { chain ->
         var newRequest = chain.request()
 
-        // Query Parameters
         val url = newRequest.url.newBuilder().build()
 
         newRequest = newRequest.newBuilder().addHeader(HEADER_ACCEPT, HEADER_ACCEPT_VALUE)
